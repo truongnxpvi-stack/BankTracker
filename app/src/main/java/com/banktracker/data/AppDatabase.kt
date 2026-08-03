@@ -16,7 +16,15 @@ abstract class AppDatabase : RoomDatabase() {
                 Room.databaseBuilder(context.applicationContext,
                     AppDatabase::class.java, "banktracker.db")
                     .fallbackToDestructiveMigration()
-                    .build().also { INSTANCE = it }
+                    Room.databaseBuilder(
+    context.applicationContext,
+    AppDatabase::class.java,
+    "banktracker.db"
+)
+.allowMainThreadQueries()
+.fallbackToDestructiveMigration()
+.build()
+.also { INSTANCE = it }
             }
     }
 }
