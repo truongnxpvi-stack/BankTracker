@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +16,6 @@ import com.banktracker.data.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,6 +26,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Ẩn toàn bộ nội dung trước khi xác thực xong
+        findViewById<View>(R.id.mainContent).visibility = View.INVISIBLE
+
+        // Xác thực vân tay ngay khi mở app
+        authenticateUser()
+    }
+
+    private fun authenticateUser() {
+        if (!BiometricHelper.canAuthenticate(this)) {
+            // Thiết bị không hỗ trợ sinh trắc → mở thẳng
+            onAuthSuccess()
+            return
+        }
+
+        BiometricHelper.showPrompt(
+            activity = this,
+            onSuccess = {
+                onAuthSuccess()
+            },
+            onFailed = {
+                // Vân tay sai → thử lại tự động (BiometricPrompt tự xử lý)
+            },
+            onError = { msg ->
+                Toast.makeText(this, "Lỗi xác thực: $msg", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        )
+    }
+
+    private fun onAuthSuccess() {
+        // Hiện nội dung sau khi xác thực thành công
+        findViewById<View>(R.id.mainContent).visibility = View.VISIBLE
         checkPermissions()
         loadData()
 
@@ -38,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         val thisMonth = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())
         val fmt = NumberFormat.getNumberInstance(Locale("vi", "VN"))
 
-        // Chạy DB trên background thread
         CoroutineScope(Dispatchers.IO).launch {
             val db = AppDatabase.getInstance(applicationContext)
 
