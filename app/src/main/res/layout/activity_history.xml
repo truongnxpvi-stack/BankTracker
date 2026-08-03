@@ -1,47 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listHistory"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f9f9f9">
-
-    <ListView
-        android:id="@+id/listHistory"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbarStyle="outsideOverlay"/>
-
-    <LinearLayout
-        android:id="@+id/tvEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <TextView
-            android:text="💳"
-            android:textSize="48sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"/>
-
-        <TextView
-            android:text="Chưa có giao dịch nào"
-            android:textSize="16sp"
-            android:textColor="#555"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:text="Thực hiện giao dịch ngân hàng\nđể xem lịch sử tại đây"
-            android:textSize="13sp"
-            android:textColor="#999"
-            android:textAlignment="center"
-            android:layout_marginTop="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-</FrameLayout>
+    android:layout_height="match_parent"/>
