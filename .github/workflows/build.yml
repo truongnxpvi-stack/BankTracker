@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,13 +22,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Gradle 8.0
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.0'
+      - name: Install Gradle 8.0 manually
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.0-bin.zip
+          unzip -q gradle-8.0-bin.zip
+          echo "$PWD/gradle-8.0/bin" >> $GITHUB_PATH
+
+      - name: Verify Gradle
+        run: gradle --version
 
       - name: Build debug APK
-        run: gradle assembleDebug --stacktrace 2>&1 | tail -100
+        run: gradle assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
